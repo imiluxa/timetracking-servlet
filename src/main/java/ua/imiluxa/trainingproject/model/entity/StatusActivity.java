@@ -1,9 +1,9 @@
 package ua.imiluxa.trainingproject.model.entity;
 
 public enum StatusActivity {
-    WAITING("Waiting"),
-    INPROGRESS("Inprogress"),
-    COMPLETED("Completed");
+    WAITING("WAITING"),
+    INPROGRESS("INPROGRESS"),
+    COMPLETED("COMPLETED");
 
     private final String statusName;
 

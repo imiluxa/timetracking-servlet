@@ -1,5 +1,6 @@
 package ua.imiluxa.trainingproject.model.dao.mapper;
 
+import ua.imiluxa.trainingproject.model.entity.Role;
 import ua.imiluxa.trainingproject.model.entity.User;
 
 import java.sql.ResultSet;
@@ -21,6 +22,8 @@ public class UserMapper implements ObjectMapper<User> {
                 .lastName(resultSet.getString("user.lastname"))
                 .password(resultSet.getString("user.password"))
                 .userName(resultSet.getString("user.username"))
+                .email(resultSet.getString("user.email"))
+                .role(Role.valueOf(resultSet.getString("user.role")))
                 .build();
     }
 }

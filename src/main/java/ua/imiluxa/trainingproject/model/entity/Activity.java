@@ -10,35 +10,35 @@ public class Activity {
     private String goal;
     private String name;
     private StatusActivity statusActivity;
-    private List<User> userList = new ArrayList<>();
-    private List<Request> requestList = new ArrayList<>();
+    private User user;
+    private Request request;
 
     public Activity(long idactivity, long duration, String goal,
                     String name, StatusActivity statusActivity,
-                    List<User> userList, List<Request> requestList) {
+                    User user, Request request) {
         this.idactivity = idactivity;
         this.duration = duration;
         this.goal = goal;
         this.name = name;
         this.statusActivity = statusActivity;
-        this.userList = userList;
-        this.requestList = requestList;
+        this.user = user;
+        this.request = request;
     }
 
-    public List<User> getUserList() {
-        return userList;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public List<Request> getRequestList() {
-        return requestList;
+    public Request getRequest() {
+        return request;
     }
 
-    public void setRequestList(List<Request> requestList) {
-        this.requestList = requestList;
+    public void setRequest(Request request) {
+        this.request = request;
     }
 
     public long getIdactivity() {
@@ -87,8 +87,8 @@ public class Activity {
         private String goal;
         private String name;
         private StatusActivity statusActivity;
-        private List<User> userList = new ArrayList<>();
-        private List<Request> requestList = new ArrayList<>();
+        private User user;
+        private Request request;
 
         public static Builder activityBuilder() {
             return new Builder();
@@ -114,18 +114,18 @@ public class Activity {
             return this;
         }
 
-        public Builder statusActivity(StatusActivity statusActivity) {
-            this.statusActivity = statusActivity;
+        public Builder statusActivity(StatusActivity statusStrActivity) {
+            this.statusActivity = statusStrActivity;
             return this;
         }
 
-        public Builder userList(List<User> userList) {
-            this.userList = userList;
+        public Builder user(User user) {
+            this.user = user;
             return this;
         }
 
-        public Builder requestList(List<Request> requestList) {
-            this.requestList = requestList;
+        public Builder request(Request request) {
+            this.request = request;
             return this;
         }
 
@@ -144,7 +144,7 @@ public class Activity {
         this.goal = builder.goal;
         this.name = builder.name;
         this.statusActivity = builder.statusActivity;
-        this.userList = builder.userList;
-        this.requestList = builder.requestList;
+        this.user = builder.user;
+        this.request = builder.request;
     }
 }

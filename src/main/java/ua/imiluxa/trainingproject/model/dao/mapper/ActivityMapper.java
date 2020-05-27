@@ -18,11 +18,11 @@ public class ActivityMapper implements ObjectMapper<Activity> {
     @Override
     public Activity extractFromResultSet(ResultSet resultSet) throws SQLException {
         return Activity.Builder.activityBuilder()
-                .idactivity(resultSet.getLong("activities.idactivity"))
-                .duration(resultSet.getLong("activities.duration"))
-                .goal(resultSet.getString("activities.goal"))
-                .name(resultSet.getString("activities.name"))
-                .statusActivity(StatusActivity.valueOf(resultSet.getString("activities.status")))
-                .build();
+                    .idactivity(resultSet.getLong("activities.id"))
+                    .duration(resultSet.getLong("activities.duration"))
+                    .goal(resultSet.getString("activities.goal"))
+                    .name(resultSet.getString("activities.name"))
+                    .statusActivity(StatusActivity.valueOf(resultSet.getString("activities.status")))
+                    .build();
     }
 }

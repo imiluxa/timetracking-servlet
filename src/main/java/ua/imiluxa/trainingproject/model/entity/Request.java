@@ -2,12 +2,12 @@ package ua.imiluxa.trainingproject.model.entity;
 
 public class Request {
     private long id;
-    private String action;
-    private String status;
+    private RequestActions action;
+    private RequestStatus status;
     private User user;
     private Activity activity;
 
-    public Request(long id, String action, String status, User user, Activity activity) {
+    public Request(long id, RequestActions action, RequestStatus status, User user, Activity activity) {
         this.id = id;
         this.action = action;
         this.status = status;
@@ -27,19 +27,19 @@ public class Request {
         this.id = id;
     }
 
-    public String getAction() {
+    public RequestActions getAction() {
         return action;
     }
 
-    public void setAction(String action) {
+    public void setAction(RequestActions action) {
         this.action = action;
     }
 
-    public String getStatus() {
+    public RequestStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(RequestStatus status) {
         this.status = status;
     }
 
@@ -61,8 +61,8 @@ public class Request {
 
     public static class Builder {
         private long id;
-        private String action;
-        private String status;
+        private RequestActions action;
+        private RequestStatus status;
         private User user;
         private Activity activity;
 
@@ -75,12 +75,12 @@ public class Request {
             return this;
         }
 
-        public Builder action(String action) {
+        public Builder action(RequestActions action) {
             this.action = action;
             return this;
         }
 
-        public Builder status(String status) {
+        public Builder status(RequestStatus status) {
             this.status = status;
             return this;
         }

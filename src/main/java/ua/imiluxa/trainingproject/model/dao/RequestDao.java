@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface RequestDao extends GenericDao<Request> {
     List<Request> findAllPageable(int page, int size);
-    List<Request> findByActivityAndUserIds(long activityId, long userid);
+    Request findByActivityAndUserIds(long activityId, long userid);
 }

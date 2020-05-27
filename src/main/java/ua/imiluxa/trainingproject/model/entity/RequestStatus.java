@@ -1,9 +1,9 @@
 package ua.imiluxa.trainingproject.model.entity;
 
 public enum RequestStatus {
-    CONFIRMED("Confirmed"),
-    DECLINED("Declined"),
-    WAITING("Waiting");
+    CONFIRMED("CONFIRMED"),
+    DECLINED("DECLINED"),
+    WAITING("WAITING");
 
     private final String statusName;
 

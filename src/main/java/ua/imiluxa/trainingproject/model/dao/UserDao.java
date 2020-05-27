@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserDao extends GenericDao<User> {
-    Optional<User> findByUsername(String userName) throws DAOException;
+    Optional<User> findByUsername(String userName);
     Optional<User> findById(long id);
     List<User> findAllPageable(int page, int size);
 

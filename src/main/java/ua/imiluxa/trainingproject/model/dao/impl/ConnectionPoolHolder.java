@@ -15,10 +15,11 @@ public class ConnectionPoolHolder {
                 if (connection == null) {
                     try {
                         Class.forName(resourceBundle.getString("db.driver"));
-                        Connection connection = DriverManager.getConnection(
+                        connection = DriverManager.getConnection(
                                 resourceBundle.getString("db.connectUrl"),
                                 resourceBundle.getString("db.user"),
                                 resourceBundle.getString("db.password"));
+
                     } catch (ClassNotFoundException | SQLException e) {
                         e.printStackTrace();
                     }

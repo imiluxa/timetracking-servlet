@@ -35,6 +35,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findById(long id) {
+
         try (PreparedStatement ps = connection.prepareStatement(rb.getString("user.findUserById"))) {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
@@ -164,4 +165,13 @@ public class UserDaoImpl implements UserDao {
         return userMap;
     }
 
+
+    @Override
+    public void close() throws Exception {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
 }

@@ -1,8 +1,8 @@
 package ua.imiluxa.trainingproject.model.entity;
 
 public enum RequestActions {
-    ADD("Add"),
-    END("End");
+    ADD("ADD"),
+    END("END");
 
     private final String actionName;
 
