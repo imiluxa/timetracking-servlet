@@ -11,7 +11,7 @@ import ua.imiluxa.trainingproject.util.exceptions.DAOException;
 import java.util.List;
 
 public class ActivityService {
-    private final DaoFactory daoFactory = DaoFactory.getInstance();
+    private static final DaoFactory daoFactory = DaoFactory.getInstance();
 
     public void createNewActivity(ActivityDTO activityDTO) {
         Activity activity = Activity.builder()
@@ -19,38 +19,49 @@ public class ActivityService {
                 .name(activityDTO.getName())
                 .statusActivity(StatusActivity.WAITING)
                 .build();
-        try(ActivityDao activityDao = daoFactory.createActivityDao()) {
+        try {
+            ActivityDao activityDao = daoFactory.createActivityDao();
             activityDao.create(activity);
+            daoFactory.getConnection().commit();
         } catch (Exception e) {
             throw new DAOException(e);
         }
     }
 
     public Activity getActivityById(long id) {
-        try(ActivityDao activityDao = daoFactory.createActivityDao()) {
-            return activityDao.findById(id).orElseThrow(() ->
+        try {
+            ActivityDao activityDao = daoFactory.createActivityDao();
+            Activity activity = activityDao.findById(id).orElseThrow(() ->
                     new Exception("cant find id " + id));
+            daoFactory.getConnection().commit();
+            return activity;
         } catch (Exception e) {
             throw new DAOException(e);
         }
     }
 
     public List<Activity> getAllActivities() {
-        try(ActivityDao activityDao = daoFactory.createActivityDao()) {
-            return activityDao.findAll();
+        try {
+            ActivityDao activityDao = daoFactory.createActivityDao();
+            List<Activity> activities = activityDao.findAll();
+            daoFactory.getConnection().commit();
+            return activities;
         } catch (Exception e) {
             throw new DAOException(e);
         }
     }
 
     public void setDuration(long id, User user, long duration) {
-        try(ActivityDao activityDao = daoFactory.createActivityDao()) {
+        try {
+            ActivityDao activityDao = daoFactory.createActivityDao();
             Activity activity = getActivityById(id);
 
             if (activity.getUser().equals(user)) {
                 activity.setDuration(duration);
                 activityDao.update(activity);
             }
+
+            daoFactory.getConnection().commit();
         } catch (Exception e) {
             throw new DAOException(e);
         }

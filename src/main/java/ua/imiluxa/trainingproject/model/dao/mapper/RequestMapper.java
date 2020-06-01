@@ -1,6 +1,8 @@
 package ua.imiluxa.trainingproject.model.dao.mapper;
 
 import ua.imiluxa.trainingproject.model.entity.Request;
+import ua.imiluxa.trainingproject.model.entity.RequestActions;
+import ua.imiluxa.trainingproject.model.entity.RequestStatus;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,8 +20,8 @@ public class RequestMapper implements ObjectMapper<Request> {
     public Request extractFromResultSet(ResultSet resultSet) throws SQLException {
         return Request.Builder.requestBuilder()
                     .id(resultSet.getLong("request.id"))
-                    .action(resultSet.getString("request.action"))
-                    .status(resultSet.getString("request.status"))
+                    .action(RequestActions.valueOf(resultSet.getString("request.action")))
+                    .status(RequestStatus.valueOf(resultSet.getString("request.status")))
                     .build();
     }
 

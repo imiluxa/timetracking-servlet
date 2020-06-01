@@ -165,13 +165,12 @@ public class UserDaoImpl implements UserDao {
         return userMap;
     }
 
-
-    @Override
+    /*@Override
     public void close() throws Exception {
         try {
             connection.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }
-    }
+    }*/
 }

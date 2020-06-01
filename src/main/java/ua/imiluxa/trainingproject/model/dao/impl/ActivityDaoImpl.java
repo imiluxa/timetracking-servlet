@@ -9,7 +9,6 @@ import ua.imiluxa.trainingproject.util.exceptions.DAOException;
 
 import java.sql.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ActivityDaoImpl implements ActivityDao {
     private final Connection connection;
@@ -31,7 +30,7 @@ public class ActivityDaoImpl implements ActivityDao {
             ResultSet rs = ps.executeQuery();
 
             Map<Long, Activity> activityMap = extractActivities(rs);
-            rs.close();
+
             return new ArrayList<>(activityMap.values());
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -83,7 +82,7 @@ public class ActivityDaoImpl implements ActivityDao {
             ResultSet rs = ps.executeQuery(rb.getString("activity.findAll"));
 
             Map<Long, Activity> activityMap = extractActivities(rs);
-            rs.close();
+
             return new ArrayList<>(activityMap.values());
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -97,7 +96,7 @@ public class ActivityDaoImpl implements ActivityDao {
             ResultSet rs = ps.executeQuery();
 
             Map<Long, Activity> activityMap = extractActivities(rs);
-            rs.close();
+
             return activityMap.values().stream().findAny();
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -125,19 +124,19 @@ public class ActivityDaoImpl implements ActivityDao {
                     user = userMapper.makeUnique(userMap, user);
                     activity.setUser(user);
                 }
-                resultSetActivity.close();
+
             }
         }
-        rs.close();
+
         return activityMap;
     }
 
-    @Override
+    /*@Override
     public void close() throws Exception {
         try {
             connection.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }
-    }
+    }*/
 }

@@ -14,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class RequestDaoImpl implements RequestDao {
     private final ResourceBundle rb = ResourceBundle.getBundle("db");
@@ -30,7 +29,7 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public List<Request> findByActivityAndUserIds(long activityId, long userid) {
+    public Request findByActivityAndUserIds(long activityId, long userid) {
         return null;
     }
 
@@ -50,8 +49,8 @@ public class RequestDaoImpl implements RequestDao {
     @Override
     public void update(Request request) {
         try (PreparedStatement ps = connection.prepareStatement(rb.getString("request.update"))) {
-            ps.setString(1, request.getAction());
-            ps.setString(2, request.getStatus());
+            ps.setString(1, request.getAction().toString());
+            ps.setString(2, request.getStatus().toString());
             ps.setLong(3, request.getUser().getId());
             ps.setLong(4, request.getActivity().getIdactivity());
             ps.setLong(5, request.getId());
@@ -77,7 +76,6 @@ public class RequestDaoImpl implements RequestDao {
             ResultSet resultSet = ps.executeQuery();
 
             Map<Long, Request> requestMap = extractRequest(resultSet);
-            resultSet.close();
             return new ArrayList<>(requestMap.values());
 
         } catch (SQLException e) {
@@ -113,7 +111,6 @@ public class RequestDaoImpl implements RequestDao {
                     request.setActivity(activity);
                 }
 
-                resultSetRequest.close();
             }
         }
         return requestMap;
@@ -133,12 +130,12 @@ public class RequestDaoImpl implements RequestDao {
         }
     }
 
-    @Override
+    /*@Override
     public void close() throws Exception {
         try {
             connection.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }
-    }
+    }*/
 }

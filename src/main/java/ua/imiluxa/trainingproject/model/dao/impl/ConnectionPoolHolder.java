@@ -19,7 +19,7 @@ public class ConnectionPoolHolder {
                                 resourceBundle.getString("db.connectUrl"),
                                 resourceBundle.getString("db.user"),
                                 resourceBundle.getString("db.password"));
-
+                        connection.setAutoCommit(false);
                     } catch (ClassNotFoundException | SQLException e) {
                         e.printStackTrace();
                     }

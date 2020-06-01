@@ -1,5 +1,8 @@
 package ua.imiluxa.trainingproject.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import ua.imiluxa.trainingproject.dto.UserDTO;
 import ua.imiluxa.trainingproject.model.dao.DaoFactory;
 import ua.imiluxa.trainingproject.model.dao.UserDao;
 import ua.imiluxa.trainingproject.model.entity.Role;
@@ -10,36 +13,45 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserService {
-    private final DaoFactory daoFactory = DaoFactory.getInstance();
+    private static final Logger log = LogManager.getLogger();
+    private static final DaoFactory daoFactory = DaoFactory.getInstance();
 
-    public Optional<User> findByUsername(String username) throws Exception {
-        try (UserDao userDao = daoFactory.createUserDao()) {
-            return userDao.findByUsername(username);
+    public Optional<User> findByUsername(String username) {
+        try {
+            UserDao userDao = daoFactory.createUserDao();
+            Optional<User> user = userDao.findByUsername(username);
+            daoFactory.getConnection().commit();
+            return user;
         } catch (Exception e) {
-            throw new DAOException(e);
+            log.warn("cant find user, or connection: " + username);
+            return Optional.empty();
         }
     }
 
-    public void createNewUser(User user) throws Exception {
+    public void createNewUser(UserDTO user) throws Exception {
         User newUser = User.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .password(user.getPassword())
-                .userName(user.getUserName())
-                .email(user.getEmail())
+                .userName(user.getUsername())
                 .role(Role.USER)
                 .build();
 
-        try (UserDao userDao = daoFactory.createUserDao()) {
+        try {
+            UserDao userDao = daoFactory.createUserDao();
             userDao.create(newUser);
+            daoFactory.getConnection().commit();
         } catch (Exception e) {
             throw new DAOException(e);
         }
     }
 
     public List<User> getAllUsers() {
-        try (UserDao userDao = daoFactory.createUserDao()) {
-            return userDao.findAll();
+        try  {
+            UserDao userDao = daoFactory.createUserDao();
+            List<User> user = userDao.findAll();
+            daoFactory.getConnection().commit();
+            return user;
         } catch (Exception e) {
             throw new DAOException(e);
         }
