@@ -2,6 +2,7 @@ package ua.imiluxa.trainingproject.model.dao;
 
 import java.sql.Connection;
 
+@Deprecated
 public interface DaoConnection extends AutoCloseable {
 
     void beginTransaction();

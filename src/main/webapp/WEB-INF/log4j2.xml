@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" strict="true" name="XMLConfigTest"
+               packages="org.apache.logging.log4j.test">
+    <appender name="dblogfile" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="${catalina.home}/logs/dblogfile.log"/>
+        <param name="Append"            value="true" />
+        <param name="ImmediateFlush"    value="true" />
+        <param name="MaxFileSize"       value="20MB" />
+        <param name="MaxBackupIndex"    value="10" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-4r [%t] %-5p %c %x - %m%n" />
+        </layout>
+    </appender>
+
+    <logger name="ua.imiluxa.trainingproject" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="dblogfile"/>
+    </logger>
+
+    <root>
+        <level value="debug" />
+        <appender-ref ref="dblogfile" />
+    </root>
+</Configuration>

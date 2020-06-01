@@ -15,7 +15,7 @@
 
 <body>
 <%@include file="header.jspf"%>
-<div class="container">
+<div class="container-fluid">
     <section class="title">
         <fmt:message key = "header.title"/>
     </section>
@@ -29,6 +29,7 @@
         </div>
     </section>
 </div>
+<div class="container">
     <form class="form-signin" action="login" method="post">
             <label id="InputUsername" for="username">
                 <fmt:message key="login.username"/>
@@ -52,6 +53,6 @@
                    class="form-control">
             <button type="submit" class="btn btn-primary"><fmt:message key="button.submit"/></button>
     </form>
-
+</div>
 </body>
 </html>

@@ -15,7 +15,7 @@
 
 <body>
 <%@include file="header.jspf"%>
-<div class="container">
+<div class="container-fluid">
     <section class="title">
         <fmt:message key = "header.title"/>
     </section>
@@ -29,47 +29,48 @@
         </div>
     </section>
 </div>
-<form class="form-signin" action="registration" method="post">
-    <label id="InputUsername" for="username">
-        <fmt:message key="registration.username"/>
-    </label>
-    <input type="text"
-           id="username"
-           name="username"
-           class="form-control"
-           placeholder="<fmt:message key="registration.username.placeholder"/>"
-           required
-           autofocus>
-    <label id="InputFirstName" for="firstname">
-        <fmt:message key="registration.firstname"/>
-    </label>
-    <input type="text"
-           id="firstname"
-           name="firstname"
-           class="form-control"
-           placeholder="<fmt:message key="registration.firstname.placeholder"/>"
-           required>
-    <label id="InputLastName" for="lastname">
-        <fmt:message key="registration.lastname"/>
-    </label>
-    <input type="text"
-           id="lastname"
-           name="lastname"
-           class="form-control"
-           placeholder="<fmt:message key="registration.lastname.placeholder"/>"
-           required>
-    <label id="InputPassword" for="password">
-        <fmt:message key="registration.password"/>
-    </label>
-    <input type="password"
-           id="password"
-           name="password"
-           class="form-control"
-           placeholder="<fmt:message key="registration.password.placeholder"/>"
-           required
-           class="form-control">
-    <button type="submit" class="btn btn-primary"><fmt:message key="button.submit"/></button>
-</form>
-
+<div class="container">
+    <form class="form-signin" action="registration" method="post">
+        <label id="InputUsername" for="username">
+            <fmt:message key="registration.username"/>
+        </label>
+        <input type="text"
+               id="username"
+               name="username"
+               class="form-control"
+               placeholder="<fmt:message key="registration.username.placeholder"/>"
+               required
+               autofocus>
+        <label id="InputFirstName" for="firstname">
+            <fmt:message key="registration.firstname"/>
+        </label>
+        <input type="text"
+               id="firstname"
+               name="firstname"
+               class="form-control"
+               placeholder="<fmt:message key="registration.firstname.placeholder"/>"
+               required>
+        <label id="InputLastName" for="lastname">
+            <fmt:message key="registration.lastname"/>
+        </label>
+        <input type="text"
+               id="lastname"
+               name="lastname"
+               class="form-control"
+               placeholder="<fmt:message key="registration.lastname.placeholder"/>"
+               required>
+        <label id="InputPassword" for="password">
+            <fmt:message key="registration.password"/>
+        </label>
+        <input type="password"
+               id="password"
+               name="password"
+               class="form-control"
+               placeholder="<fmt:message key="registration.password.placeholder"/>"
+               required
+               class="form-control">
+        <button type="submit" class="btn btn-primary"><fmt:message key="button.submit"/></button>
+    </form>
+</div>
 </body>
 </html>

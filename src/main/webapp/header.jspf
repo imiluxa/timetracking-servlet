@@ -46,6 +46,10 @@
                             <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/app/users"><fmt:message key ="menu.users"/></a></li>
                         </c:if>
                         <c:if test="${role ne null}">
+                            <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/app/activities"><fmt:message key = "menu.activities"/></a></li>
+                            <c:if test="${role eq 'ADMIN'}">
+                                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/app/add_activity"><fmt:message key = "menu.add.activity"/></a></li>
+                            </c:if>
                             <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/app/logout"><fmt:message key = "menu.logout"/></a></li>
                         </c:if>
                     </ul>

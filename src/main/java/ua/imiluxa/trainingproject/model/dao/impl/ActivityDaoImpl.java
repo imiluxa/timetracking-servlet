@@ -2,8 +2,10 @@ package ua.imiluxa.trainingproject.model.dao.impl;
 
 import ua.imiluxa.trainingproject.model.dao.ActivityDao;
 import ua.imiluxa.trainingproject.model.dao.mapper.ActivityMapper;
+import ua.imiluxa.trainingproject.model.dao.mapper.RequestMapper;
 import ua.imiluxa.trainingproject.model.dao.mapper.UserMapper;
 import ua.imiluxa.trainingproject.model.entity.Activity;
+import ua.imiluxa.trainingproject.model.entity.Request;
 import ua.imiluxa.trainingproject.model.entity.User;
 import ua.imiluxa.trainingproject.util.exceptions.DAOException;
 
@@ -44,6 +46,7 @@ public class ActivityDaoImpl implements ActivityDao {
             ps.setString(2, activity.getGoal());
             ps.setString(3, activity.getName());
             ps.setString(4, String.valueOf(activity.getStatusActivity()));
+            ps.setLong(5, activity.getUser().getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -106,9 +109,11 @@ public class ActivityDaoImpl implements ActivityDao {
     private Map<Long, Activity> extractActivities(ResultSet rs) throws SQLException {
         Map<Long, Activity> activityMap = new LinkedHashMap<>();
         Map<Long, User> userMap = new HashMap<>();
+        Map<Long, Request> reqMap = new HashMap<>();
 
         UserMapper userMapper = new UserMapper();
         ActivityMapper activityMapper = new ActivityMapper();
+        RequestMapper requestMapper = new RequestMapper();
 
         while (rs.next()) {
             Activity activity = activityMapper.extractFromResultSet(rs);
@@ -121,8 +126,11 @@ public class ActivityDaoImpl implements ActivityDao {
 
                 while (resultSetActivity.next()) {
                     User user = userMapper.extractFromResultSet(resultSetActivity);
+                    Request request = requestMapper.extractFromResultSet(resultSetActivity);
                     user = userMapper.makeUnique(userMap, user);
+                    request = requestMapper.makeUnique(reqMap, request);
                     activity.setUser(user);
+                    activity.setRequest(request);
                 }
 
             }

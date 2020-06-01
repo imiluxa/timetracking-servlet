@@ -40,6 +40,7 @@ public class RequestDaoImpl implements RequestDao {
             ps.setString(2, request.getStatus().toString());
             ps.setLong(3, request.getUser().getId());
             ps.setLong(4, request.getActivity().getIdactivity());
+            delete(request);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e);

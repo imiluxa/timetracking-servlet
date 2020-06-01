@@ -40,10 +40,31 @@ public class ActivityService {
         }
     }
 
+    public void update(Activity activity) {
+        try {
+            ActivityDao activityDao = daoFactory.createActivityDao();
+            activityDao.update(activity);
+            daoFactory.getConnection().commit();
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
     public List<Activity> getAllActivities() {
         try {
             ActivityDao activityDao = daoFactory.createActivityDao();
             List<Activity> activities = activityDao.findAll();
+            daoFactory.getConnection().commit();
+            return activities;
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    public List<Activity> getAllActivitiesByUserId(long id) {
+        try {
+            ActivityDao activityDao = daoFactory.createActivityDao();
+            List<Activity> activities = activityDao.findByUserId(id);
             daoFactory.getConnection().commit();
             return activities;
         } catch (Exception e) {

@@ -7,6 +7,7 @@ import ua.imiluxa.trainingproject.model.dao.DaoConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+@Deprecated
 public class ConnectionDaoImpl implements DaoConnection {
     private static final Connection connection = ConnectionPoolHolder.getConnection();
     private static final Logger log = LogManager.getLogger();
