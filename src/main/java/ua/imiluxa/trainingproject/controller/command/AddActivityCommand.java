@@ -23,15 +23,14 @@ public class AddActivityCommand implements Command {
         String strIdAct = request.getParameter("activity.id");
 
         setDefAttributes(request);
-        if (strIdAct == null) {
-            setDefAttributes(request);
-        } else {
+
+        if (strIdAct != null) {
             Long idAct = Long.valueOf(strIdAct);
             Activity activity = activityService.getActivityById(idAct);
             if (!Objects.isNull(activity)) {
                 request.setAttribute("activity", activity);
-                setDefAttributes(request);
             }
+
         }
 
         return "/add_activity.jsp";

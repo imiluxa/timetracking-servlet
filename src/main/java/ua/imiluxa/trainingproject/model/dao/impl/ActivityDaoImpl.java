@@ -46,7 +46,7 @@ public class ActivityDaoImpl implements ActivityDao {
             ps.setString(2, activity.getGoal());
             ps.setString(3, activity.getName());
             ps.setString(4, String.valueOf(activity.getStatusActivity()));
-            ps.setLong(5, activity.getUser().getId());
+            //ps.setLong(5, activity.getUser().getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -123,15 +123,22 @@ public class ActivityDaoImpl implements ActivityDao {
             try (PreparedStatement ps = connection.prepareStatement(rb.getString("activity.and.user"))) {
                 ps.setLong(1, activity.getIdactivity());
                 ResultSet resultSetActivity = ps.executeQuery();
-
                 while (resultSetActivity.next()) {
                     User user = userMapper.extractFromResultSet(resultSetActivity);
-                    Request request = requestMapper.extractFromResultSet(resultSetActivity);
                     user = userMapper.makeUnique(userMap, user);
-                    request = requestMapper.makeUnique(reqMap, request);
                     activity.setUser(user);
-                    activity.setRequest(request);
                 }
+            }
+            try (PreparedStatement ps = connection.prepareStatement(rb.getString("request.and.user"))) {
+                ps.setLong(1, activity.getIdactivity());
+                ResultSet resultSetRequest = ps.executeQuery();
+                Map<Long, Request> requestMap = new LinkedHashMap<>();
+                while (resultSetRequest.next()) {
+                    Request request = requestMapper.extractFromResultSet(resultSetRequest);
+                    request = requestMapper.makeUnique(reqMap, request);
+                    requestMap.put(resultSetRequest.getLong("request.user_id"), request);
+                }
+                activity.setRequestMap(requestMap);
 
             }
         }

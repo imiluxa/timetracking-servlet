@@ -15,4 +15,6 @@ public enum StatusActivity {
     public String toString() {
         return statusName;
     }
+
+    public String getValue() { return statusName;}
 }

@@ -35,8 +35,7 @@ public class AuthenticationFilter implements Filter {
             filterChain.doFilter(request, response);
         } else {
             response.sendRedirect(request.getContextPath() +
-                    request.getServletPath() +
-                    "/index");
+                    request.getServletPath() + "/index");
             return;
         }
     }

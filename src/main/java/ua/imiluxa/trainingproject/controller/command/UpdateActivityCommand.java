@@ -1,26 +1,24 @@
 package ua.imiluxa.trainingproject.controller.command;
 
 import ua.imiluxa.trainingproject.dto.ActivityDTO;
-import ua.imiluxa.trainingproject.dto.RequestDTO;
-import ua.imiluxa.trainingproject.model.entity.*;
+import ua.imiluxa.trainingproject.model.entity.Activity;
+import ua.imiluxa.trainingproject.model.entity.Role;
+import ua.imiluxa.trainingproject.model.entity.StatusActivity;
+import ua.imiluxa.trainingproject.model.entity.User;
 import ua.imiluxa.trainingproject.service.ActivityService;
-import ua.imiluxa.trainingproject.service.RequestService;
 import ua.imiluxa.trainingproject.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 public class UpdateActivityCommand implements Command {
     private final ActivityService activityService;
     private final UserService userService;
-    private final RequestService requestService;
 
     public UpdateActivityCommand(ActivityService activityService,
-                                 UserService userService,
-                                 RequestService requestService) {
+                                 UserService userService) {
         this.activityService = activityService;
         this.userService = userService;
-        this.requestService = requestService;
+
     }
 
     @Override
@@ -32,23 +30,20 @@ public class UpdateActivityCommand implements Command {
             String activityGoal = request.getParameter("activity.goal");
             String strActivityDuration = request.getParameter("activity.duration");
             String activityStatus = request.getParameter("status");
-            String reqAction = request.getParameter("reqAction");
-            String reqStatus = request.getParameter("reqStatus");
             String username = request.getParameter("username");
 
             Long activityId = 0L;
             Long actDuration = 0L;
 
-            try {
-                activityId = Long.valueOf(strActivityId);
-                actDuration = Long.valueOf(strActivityDuration); }
-            catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
             User reqUser = userService.findByUsername(username).get();
 
-            if (activityId==0L) {
+            if (strActivityId=="") {
+
+                try {
+                    actDuration = Long.valueOf(strActivityDuration); }
+                catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
 
                 ActivityDTO activityDTO = ActivityDTO.builder()
                         .name(activityName)
@@ -60,24 +55,15 @@ public class UpdateActivityCommand implements Command {
 
                 activityService.createNewActivity(activityDTO);
 
-                List<Activity> activities = activityService.getAllActivitiesByUserId(reqUser.getId());
+            } else {
 
-                for (Activity activity:
-                     activities) {
-                    if (activity.getRequest() == null) {
-                        RequestDTO requestDTO = RequestDTO.builder()
-                                .activity(activity)
-                                .user(reqUser)
-                                .action(RequestActions.valueOf(reqAction))
-                                .status(RequestStatus.valueOf(reqStatus))
-                                .build();
-
-                        requestService.create(requestDTO);
-                        break;
-                    }
+                try {
+                    activityId = Long.valueOf(strActivityId);
+                    actDuration = Long.valueOf(strActivityDuration); }
+                catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
 
-            } else {
                 Activity activity = Activity.builder()
                         .idactivity(activityId)
                         .name(activityName)
@@ -87,15 +73,7 @@ public class UpdateActivityCommand implements Command {
                         .user(reqUser)
                         .build();
 
-                Request updRequest = Request.builder()
-                        .activity(activity)
-                        .user(reqUser)
-                        .action(RequestActions.valueOf(reqAction))
-                        .status(RequestStatus.valueOf(reqStatus))
-                        .build();
-
                 activityService.update(activity);
-                requestService.update(updRequest);
 
             }
 
@@ -103,8 +81,6 @@ public class UpdateActivityCommand implements Command {
             String strActivityId = request.getParameter("activity.id");
             String activityDuration = request.getParameter("activity.duration");
             String activityStatus = request.getParameter("status");
-            String reqAction = request.getParameter("reqAction");
-            String reqStatus = request.getParameter("reqStatus");
 
             Activity activity = activityService.getActivityById(Long.valueOf(strActivityId));
 
@@ -117,20 +93,9 @@ public class UpdateActivityCommand implements Command {
                     .user((User) request.getSession().getAttribute("roleUser"))
                     .build();
 
-            Request updRequest = Request.builder()
-                    .activity(activity)
-                    .user((User) request.getSession().getAttribute("roleUser"))
-                    .action(RequestActions.valueOf(reqAction))
-                    .status(RequestStatus.valueOf(reqStatus))
-                    .build();
-
             activityService.update(updActivity);
-            requestService.update(updRequest);
 
-
-        } else {
-            return "/activities.jsp";
         }
-        return "/activities.jsp";
+        return "redirect:/activities";
     }
 }

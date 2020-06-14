@@ -29,8 +29,33 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public Request findByActivityAndUserIds(long activityId, long userid) {
-        return null;
+    public Optional<Request> findByActivityAndUserIds(long activityId, long userId) {
+        try(PreparedStatement ps = connection.prepareStatement(rb.getString("request.findByUserIdAndActivityId"))) {
+            ps.setLong(1, activityId);
+            ps.setLong(2, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            Map<Long, Request> requestMap = extractRequest(rs);
+            return requestMap.values().stream().findAny();
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    @Override
+    public List<Request> findByActivity(long activityId){
+        try(PreparedStatement ps= connection.prepareStatement(rb.getString("request.findByActivityId"))) {
+            ps.setLong(1, activityId);
+
+            ResultSet rs = ps.executeQuery();
+
+            Map<Long, Request> requestMap = extractRequest(rs);
+
+            return new ArrayList<>(requestMap.values());
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
@@ -99,9 +124,9 @@ public class RequestDaoImpl implements RequestDao {
         }
 
         for(Request request : requestMap.values()) {
-            try (PreparedStatement pspreparedStatement = connection.prepareStatement(rb.getString("request.and.activity.and.user"))) {
-                pspreparedStatement.setLong(1, request.getId());
-                ResultSet resultSetRequest = pspreparedStatement.executeQuery();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(rb.getString("request.and.activity.and.user"))) {
+                preparedStatement.setLong(1, request.getId());
+                ResultSet resultSetRequest = preparedStatement.executeQuery();
 
                 while(resultSetRequest.next()) {
                     User user = userMapper.extractFromResultSet(resultSetRequest);

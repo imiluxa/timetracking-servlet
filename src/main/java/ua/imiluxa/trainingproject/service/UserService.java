@@ -28,6 +28,18 @@ public class UserService {
         }
     }
 
+    public User findById(long userId) {
+        try {
+            UserDao userDao = daoFactory.createUserDao();
+            Optional<User> user = userDao.findById(userId);
+            daoFactory.getConnection().commit();
+            return user.get();
+        } catch (Exception e) {
+            log.warn("cant find user, or connection: " + userId);
+            throw new RuntimeException(e);
+        }
+    }
+
     public void createNewUser(UserDTO user) throws Exception {
         User newUser = User.builder()
                 .firstName(user.getFirstName())

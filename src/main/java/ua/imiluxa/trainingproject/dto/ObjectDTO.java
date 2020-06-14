@@ -2,6 +2,7 @@ package ua.imiluxa.trainingproject.dto;
 
 import ua.imiluxa.trainingproject.model.entity.*;
 
+@Deprecated
 public class ObjectDTO {
     private long duration;
     private String goal;

@@ -1,7 +1,7 @@
 package ua.imiluxa.trainingproject.model.entity;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Activity {
 
@@ -11,11 +11,20 @@ public class Activity {
     private String name;
     private StatusActivity statusActivity;
     private User user;
-    private Request request;
+    private List<Request> request;
+    private Map<Long, Request> requestMap;
+
+    public Map<Long, Request> getRequestMap() {
+        return requestMap;
+    }
+
+    public void setRequestMap(Map<Long, Request> requestMap) {
+        this.requestMap = requestMap;
+    }
 
     public Activity(long idactivity, long duration, String goal,
                     String name, StatusActivity statusActivity,
-                    User user, Request request) {
+                    User user, List<Request> request, Map<Long, Request> requestMap) {
         this.idactivity = idactivity;
         this.duration = duration;
         this.goal = goal;
@@ -23,6 +32,7 @@ public class Activity {
         this.statusActivity = statusActivity;
         this.user = user;
         this.request = request;
+        this.requestMap = requestMap;
     }
 
     public User getUser() {
@@ -33,11 +43,11 @@ public class Activity {
         this.user = user;
     }
 
-    public Request getRequest() {
+    public List<Request> getRequest() {
         return request;
     }
 
-    public void setRequest(Request request) {
+    public void setRequest(List<Request> request) {
         this.request = request;
     }
 
@@ -88,7 +98,8 @@ public class Activity {
         private String name;
         private StatusActivity statusActivity;
         private User user;
-        private Request request;
+        private List<Request> request;
+        private Map<Long, Request> requestMap;
 
         public static Builder activityBuilder() {
             return new Builder();
@@ -124,8 +135,13 @@ public class Activity {
             return this;
         }
 
-        public Builder request(Request request) {
+        public Builder request(List<Request> request) {
             this.request = request;
+            return this;
+        }
+
+        public Builder requestMap(Map<Long, Request> requestMap) {
+            this.requestMap = requestMap;
             return this;
         }
 
@@ -146,5 +162,6 @@ public class Activity {
         this.statusActivity = builder.statusActivity;
         this.user = builder.user;
         this.request = builder.request;
+        this.requestMap = builder.requestMap;
     }
 }

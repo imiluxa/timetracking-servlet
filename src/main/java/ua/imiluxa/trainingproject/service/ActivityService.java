@@ -4,7 +4,6 @@ import ua.imiluxa.trainingproject.dto.ActivityDTO;
 import ua.imiluxa.trainingproject.model.dao.ActivityDao;
 import ua.imiluxa.trainingproject.model.dao.DaoFactory;
 import ua.imiluxa.trainingproject.model.entity.Activity;
-import ua.imiluxa.trainingproject.model.entity.StatusActivity;
 import ua.imiluxa.trainingproject.model.entity.User;
 import ua.imiluxa.trainingproject.util.exceptions.DAOException;
 
@@ -15,9 +14,11 @@ public class ActivityService {
 
     public void createNewActivity(ActivityDTO activityDTO) {
         Activity activity = Activity.builder()
+                .duration(activityDTO.getDuration())
                 .goal(activityDTO.getGoal())
                 .name(activityDTO.getName())
-                .statusActivity(StatusActivity.WAITING)
+                .statusActivity(activityDTO.getStatusActivity())
+                //.user(activityDTO.getUser())
                 .build();
         try {
             ActivityDao activityDao = daoFactory.createActivityDao();

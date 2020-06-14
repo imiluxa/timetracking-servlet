@@ -12,6 +12,7 @@ import ua.imiluxa.trainingproject.model.entity.*;
 import ua.imiluxa.trainingproject.util.exceptions.DAOException;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 
 public class RequestService {
@@ -25,6 +26,7 @@ public class RequestService {
                     .user(requestDTO.getUser())
                     .status(requestDTO.getStatus())
                     .action(requestDTO.getAction())
+                    .activity(requestDTO.getActivity())
                     .build();
             requestDao.create(request);
         } catch (Exception e) {
@@ -80,30 +82,14 @@ public class RequestService {
     public Request getRequestByUserIdAndActivityId(long userId, long actId) {
         try {
             RequestDao requestDao = daoFactory.createRequestDao();
-            Request request = requestDao.findByActivityAndUserIds(userId, actId);
+            Optional<Request> request = requestDao.findByActivityAndUserIds(userId, actId);
             daoFactory.getConnection().commit();
-            return request;
+            return request.orElse(null);
         } catch (Exception e) {
             throw new DAOException(e);
         }
     }
 
-    public void changeRequest(Request request, RequestStatus requestStatus,
-                              RequestActions requestActions) {
-        try {
-            RequestDao requestDao = daoFactory.createRequestDao();
-            Request updateRequest = Request.builder()
-                    .action(requestActions)
-                    .status(requestStatus)
-                    .user(request.getUser())
-                    .activity(request.getActivity())
-                    .build();
-            requestDao.update(updateRequest);
-            daoFactory.getConnection().commit();
-        } catch (Exception e) {
-            throw new DAOException(e);
-        }
-    }
 
     public void update(Request request) {
         try {

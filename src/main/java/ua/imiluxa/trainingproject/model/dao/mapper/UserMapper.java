@@ -16,7 +16,7 @@ public class UserMapper implements ObjectMapper<User> {
 
     @Override
     public User extractFromResultSet(ResultSet resultSet) throws SQLException {
-        return User.Builder.userbuilder()
+        return resultSet.getLong("user.id") != 0L ? User.Builder.userbuilder()
                 .id(resultSet.getLong("user.id"))
                 .firstName(resultSet.getString("user.firstname"))
                 .lastName(resultSet.getString("user.lastname"))
@@ -24,6 +24,6 @@ public class UserMapper implements ObjectMapper<User> {
                 .userName(resultSet.getString("user.username"))
                 .email(resultSet.getString("user.email"))
                 .role(Role.valueOf(resultSet.getString("user.role")))
-                .build();
+                .build() : null;
     }
 }
