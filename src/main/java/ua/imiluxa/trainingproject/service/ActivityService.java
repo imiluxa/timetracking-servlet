@@ -18,7 +18,7 @@ public class ActivityService {
                 .goal(activityDTO.getGoal())
                 .name(activityDTO.getName())
                 .statusActivity(activityDTO.getStatusActivity())
-                //.user(activityDTO.getUser())
+                .user(activityDTO.getUser())
                 .build();
         try {
             ActivityDao activityDao = daoFactory.createActivityDao();
@@ -66,6 +66,39 @@ public class ActivityService {
         try {
             ActivityDao activityDao = daoFactory.createActivityDao();
             List<Activity> activities = activityDao.findByUserId(id);
+            daoFactory.getConnection().commit();
+            return activities;
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    @Deprecated
+    public void saveHistory(Activity activity) {
+        try {
+            ActivityDao activityDao = daoFactory.createActivityDao();
+            activityDao.saveHistory(activity);
+            daoFactory.getConnection().commit();
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    public List<Activity> findHistoryByUserId(long userid) {
+        try {
+            ActivityDao activityDao = daoFactory.createActivityDao();
+            List<Activity> activities = activityDao.findHistoryByUserId(userid);
+            daoFactory.getConnection().commit();
+            return activities;
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    public List<Activity> findAllHistory() {
+        try {
+            ActivityDao activityDao = daoFactory.createActivityDao();
+            List<Activity> activities = activityDao.findAllHistory();
             daoFactory.getConnection().commit();
             return activities;
         } catch (Exception e) {

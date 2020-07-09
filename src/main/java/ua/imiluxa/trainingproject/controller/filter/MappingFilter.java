@@ -13,12 +13,13 @@ public class MappingFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        final HttpServletRequest req = (HttpServletRequest) servletRequest;
-        final HttpServletResponse resp = (HttpServletResponse) servletResponse;
+        final HttpServletRequest request = (HttpServletRequest) servletRequest;
+        final HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        String path = req.getRequestURI();
-        String query = req.getQueryString();
-
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+        filterChain.doFilter(request, response);
 
     }
 
@@ -26,4 +27,5 @@ public class MappingFilter implements Filter {
     public void destroy() {
 
     }
+
 }

@@ -1,23 +1,25 @@
-<!DOCTYPE HTML>
-<%@ page pageEncoding="UTF-8"%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<!DOCTYPE HTML>
+<!-- %@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %-->
 
 <fmt:setLocale value="${sessionScope.language}" />
 <fmt:setBundle basename="messages" />
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 
 <body>
 <%@include file="header.jspf"%>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-14">
+        <div class="col-lg-20">
             <div class="card">
                 <div class="card-header">
                     <h1 class="display-3"><fmt:message key="activities.title"/></h1>
@@ -57,6 +59,14 @@
                                     <th scope="col">
                                         <fmt:message key="activities.edit"/>
                                     </th>
+                                    <th scope="col">
+                                        <fmt:message key="request.edit"/>
+                                    </th>
+                                    <c:if test="${role eq 'ADMIN'}">
+                                        <th scope="col">
+                                            <fmt:message key="users.requests.edit"/>
+                                        </th>
+                                    </c:if>
                                 </tr>
                             </thead>
                             <tbody>
@@ -74,6 +84,12 @@
                                                    form="req${activity.getIdactivity()}"
                                                    value="${activity.getIdactivity()}">
                                         </form>
+                                        <form method="post" action="all_requests" id="all_req${activity.getIdactivity()}">
+                                            <input type="hidden"
+                                                   name="request.act.id"
+                                                   form="all_req${activity.getIdactivity()}"
+                                                   value="${activity.getIdactivity()}">
+                                        </form>
                                             <td scope="row">${activity.getIdactivity()}</td>
                                             <td scope="row">${activity.getUser().getFirstName()}</td>
                                             <td scope="row">${activity.getUser().getLastName()}</td>
@@ -84,17 +100,16 @@
                                             <td scope="row">${activity.getRequestMap().get(roleUser.getId()).getAction()}</td>
                                             <td scope="row">${activity.getRequestMap().get(roleUser.getId()).getStatus()}</td>
                                             <c:if test="${sessionScope.roleUser.getId() eq activity.getUser().getId() || role eq 'ADMIN'}">
-                                                <td class="row"><button value="Submit" type="submit" class="btn btn-primary" form="act${activity.getIdactivity()}" name="edit.activity">
+                                                <td scope="row"><button value="Submit" type="submit" class="btn btn-primary" form="act${activity.getIdactivity()}" name="edit.activity">
                                                     <fmt:message key="activities.edit"/>
                                                 </button></td>
                                             </c:if>
                                             <c:if test="${sessionScope.roleUser.getId() ne activity.getUser().getId() && role ne 'ADMIN'}">
-                                                <td class="row"><button value="Submit" type="submit" class="btn btn-primary" form="act${activity.getIdactivity()}" name="edit.activity" disabled>
+                                                <td scope="row"><button value="Submit" type="submit" class="btn btn-primary" form="act${activity.getIdactivity()}" name="edit.activity" disabled>
                                                     <fmt:message key="activities.edit"/>
                                                 </button></td>
                                             </c:if>
-
-                                            <td class="row"><button value="Submit" type="submit" class="btn btn-primary" form="req${activity.getIdactivity()}" name="edit.request">
+                                            <td scope="row"><button value="Submit" type="submit" class="btn btn-primary" form="req${activity.getIdactivity()}" name="edit.request">
                                                 <c:choose><c:when test="${activity.getRequestMap().get(roleUser.getId()) eq null}">
                                                     <fmt:message key="requests.add"/>
                                                 </c:when>
@@ -103,7 +118,11 @@
                                                 </c:otherwise>
                                                 </c:choose>
                                             </button></td>
-
+                                            <c:if test="${role eq 'ADMIN'}">
+                                                <td scope="row"><button value="Submit" type="submit" class="btn btn-primary" form="all_req${activity.getIdactivity()}" name="edit.requests">
+                                                    <fmt:message key="all.requests.edit"/>
+                                                </button></td>
+                                            </c:if>
                                     </tr>
                                 </c:forEach>
                             </tbody>

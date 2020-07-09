@@ -1,14 +1,12 @@
 package ua.imiluxa.trainingproject.controller.command;
 
 import ua.imiluxa.trainingproject.dto.RequestDTO;
-import ua.imiluxa.trainingproject.model.entity.Request;
-import ua.imiluxa.trainingproject.model.entity.RequestActions;
-import ua.imiluxa.trainingproject.model.entity.RequestStatus;
-import ua.imiluxa.trainingproject.model.entity.User;
+import ua.imiluxa.trainingproject.model.entity.*;
 import ua.imiluxa.trainingproject.service.ActivityService;
 import ua.imiluxa.trainingproject.service.RequestService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 public class UpdateRequestCommand implements Command {
     private final ActivityService activityService;
@@ -47,8 +45,22 @@ public class UpdateRequestCommand implements Command {
         } else {
             Request req = requestService.getRequestById(reqId);
 
+            if (RequestStatus.valueOf(reqStatus) == RequestStatus.CONFIRMED && RequestActions.valueOf(reqAction) == RequestActions.ADD) {
+                Activity activity = activityService.getActivityById(actId);
+                activity.setUser(user);
+                activityService.update(activity);
+                List<Request> requestList = requestService.getRequestsByActivityId(actId);
+                for (Request reqIter:
+                        requestList) {
+                    reqIter.setStatus(RequestStatus.DECLINED);
+                    requestService.update(reqIter);
+                }
+            }
+
             req.setAction(RequestActions.valueOf(reqAction));
             req.setStatus(RequestStatus.valueOf(reqStatus));
+
+
 
             requestService.update(req);
         }

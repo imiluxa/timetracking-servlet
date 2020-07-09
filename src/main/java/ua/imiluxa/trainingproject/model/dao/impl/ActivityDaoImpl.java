@@ -6,6 +6,7 @@ import ua.imiluxa.trainingproject.model.dao.mapper.RequestMapper;
 import ua.imiluxa.trainingproject.model.dao.mapper.UserMapper;
 import ua.imiluxa.trainingproject.model.entity.Activity;
 import ua.imiluxa.trainingproject.model.entity.Request;
+import ua.imiluxa.trainingproject.model.entity.StatusActivity;
 import ua.imiluxa.trainingproject.model.entity.User;
 import ua.imiluxa.trainingproject.util.exceptions.DAOException;
 
@@ -31,7 +32,7 @@ public class ActivityDaoImpl implements ActivityDao {
             ps.setLong(1, userid);
             ResultSet rs = ps.executeQuery();
 
-            Map<Long, Activity> activityMap = extractActivities(rs);
+            Map<Long, Activity> activityMap = extractActivities(rs, rb.getString("activity.and.user"));
 
             return new ArrayList<>(activityMap.values());
         } catch (SQLException e) {
@@ -46,7 +47,7 @@ public class ActivityDaoImpl implements ActivityDao {
             ps.setString(2, activity.getGoal());
             ps.setString(3, activity.getName());
             ps.setString(4, String.valueOf(activity.getStatusActivity()));
-            //ps.setLong(5, activity.getUser().getId());
+            ps.setLong(5, activity.getUser().getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -56,13 +57,19 @@ public class ActivityDaoImpl implements ActivityDao {
     @Override
     public void update(Activity activity) {
         try (PreparedStatement ps = connection.prepareStatement(rb.getString("activity.update"))) {
-            ps.setLong(1, activity.getDuration());
-            ps.setString(2, activity.getGoal());
-            ps.setString(3, activity.getName());
-            ps.setString(4, String.valueOf(activity.getStatusActivity()));
-            ps.setLong(5, activity.getUser().getId());
-            ps.setLong(6, activity.getIdactivity());
-            ps.executeUpdate();
+
+            if (activity.getStatusActivity() == StatusActivity.COMPLETED) {
+                saveHistory(activity);
+                delete(activity);
+            } else {
+                ps.setLong(1, activity.getDuration());
+                ps.setString(2, activity.getGoal());
+                ps.setString(3, activity.getName());
+                ps.setString(4, String.valueOf(activity.getStatusActivity()));
+                ps.setLong(5, activity.getUser().getId());
+                ps.setLong(6, activity.getIdactivity());
+                ps.executeUpdate();
+            }
         } catch (SQLException e) {
             throw new DAOException(e);
         }
@@ -84,7 +91,7 @@ public class ActivityDaoImpl implements ActivityDao {
         try (Statement ps = connection.createStatement()) {
             ResultSet rs = ps.executeQuery(rb.getString("activity.findAll"));
 
-            Map<Long, Activity> activityMap = extractActivities(rs);
+            Map<Long, Activity> activityMap = extractActivities(rs, rb.getString("activity.and.user"));
 
             return new ArrayList<>(activityMap.values());
         } catch (SQLException e) {
@@ -98,7 +105,7 @@ public class ActivityDaoImpl implements ActivityDao {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
 
-            Map<Long, Activity> activityMap = extractActivities(rs);
+            Map<Long, Activity> activityMap = extractActivities(rs, rb.getString("activity.and.user"));
 
             return activityMap.values().stream().findAny();
         } catch (SQLException e) {
@@ -106,7 +113,47 @@ public class ActivityDaoImpl implements ActivityDao {
         }
     }
 
-    private Map<Long, Activity> extractActivities(ResultSet rs) throws SQLException {
+    public void saveHistory(Activity activity) {
+        try (PreparedStatement ps = connection.prepareStatement(rb.getString("activity.saveHistory"))) {
+            ps.setLong(1, activity.getIdactivity());
+            ps.setLong(2, activity.getDuration());
+            ps.setString(3, activity.getGoal());
+            ps.setString(4, activity.getName());
+            ps.setString(5, activity.getStatusActivity().getValue());
+            ps.setLong(6, activity.getUser().getId());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    public List<Activity> findHistoryByUserId(long userid) {
+        try (PreparedStatement ps = connection.prepareStatement(rb.getString("activity.findHistoryByUserId"))) {
+            ps.setLong(1, userid);
+            ResultSet rs = ps.executeQuery();
+
+            Map<Long, Activity> activityMap = extractActivities(rs, rb.getString("activity_history.and.user"));
+
+            return new ArrayList<>(activityMap.values());
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    public List<Activity> findAllHistory() {
+        try (Statement ps = connection.createStatement()) {
+            ResultSet rs = ps.executeQuery(rb.getString("activity.findAllHistory"));
+
+            Map<Long, Activity> activityMap = extractActivities(rs, rb.getString("activity_history.and.user"));
+
+            return new ArrayList<>(activityMap.values());
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    private Map<Long, Activity> extractActivities(ResultSet rs, String statement) throws SQLException {
         Map<Long, Activity> activityMap = new LinkedHashMap<>();
         Map<Long, User> userMap = new HashMap<>();
         Map<Long, Request> reqMap = new HashMap<>();
@@ -120,7 +167,7 @@ public class ActivityDaoImpl implements ActivityDao {
             activityMapper.makeUnique(activityMap, activity);
         }
         for (Activity activity : activityMap.values()) {
-            try (PreparedStatement ps = connection.prepareStatement(rb.getString("activity.and.user"))) {
+            try (PreparedStatement ps = connection.prepareStatement(statement/*rb.getString("activity.and.user")*/)) {
                 ps.setLong(1, activity.getIdactivity());
                 ResultSet resultSetActivity = ps.executeQuery();
                 while (resultSetActivity.next()) {

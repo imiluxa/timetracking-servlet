@@ -25,12 +25,15 @@ public class AuthenticationFilter implements Filter {
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         HttpSession session = request.getSession();
-        String reqString = request.getRequestURI().replaceFirst(request.getContextPath() + "/app", "");
+
+        String reqString = request.getRequestURI()
+                .replaceFirst(request.getContextPath() + "/app", "");
         Set<String> allowedPath;
 
         Role role = securityUtility.getSessionRole(session);
 
         allowedPath = securityUtility.authCommands.get(role);
+
         if (allowedPath.contains(reqString)) {
             filterChain.doFilter(request, response);
         } else {
@@ -38,6 +41,7 @@ public class AuthenticationFilter implements Filter {
                     request.getServletPath() + "/index");
             return;
         }
+
     }
 
     @Override

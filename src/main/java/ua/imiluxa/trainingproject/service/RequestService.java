@@ -8,10 +8,13 @@ import ua.imiluxa.trainingproject.model.dao.ActivityDao;
 import ua.imiluxa.trainingproject.model.dao.DaoFactory;
 import ua.imiluxa.trainingproject.model.dao.RequestDao;
 import ua.imiluxa.trainingproject.model.dao.UserDao;
-import ua.imiluxa.trainingproject.model.entity.*;
+import ua.imiluxa.trainingproject.model.entity.Request;
+import ua.imiluxa.trainingproject.model.entity.RequestActions;
+import ua.imiluxa.trainingproject.model.entity.RequestStatus;
 import ua.imiluxa.trainingproject.util.exceptions.DAOException;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -85,6 +88,17 @@ public class RequestService {
             Optional<Request> request = requestDao.findByActivityAndUserIds(userId, actId);
             daoFactory.getConnection().commit();
             return request.orElse(null);
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    public List<Request> getRequestsByActivityId(long actId) {
+        try {
+            RequestDao requestDao = daoFactory.createRequestDao();
+            List<Request> request = requestDao.findByActivity(actId);
+            daoFactory.getConnection().commit();
+            return request;
         } catch (Exception e) {
             throw new DAOException(e);
         }

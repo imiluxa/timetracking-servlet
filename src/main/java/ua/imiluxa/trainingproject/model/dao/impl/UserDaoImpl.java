@@ -1,5 +1,6 @@
 package ua.imiluxa.trainingproject.model.dao.impl;
 
+import org.mindrot.jbcrypt.BCrypt;
 import ua.imiluxa.trainingproject.model.dao.UserDao;
 import ua.imiluxa.trainingproject.model.dao.mapper.ActivityMapper;
 import ua.imiluxa.trainingproject.model.dao.mapper.RequestMapper;
@@ -57,9 +58,11 @@ public class UserDaoImpl implements UserDao {
     public void create(User entity) {
         try(PreparedStatement ps = connection.prepareStatement(
                 rb.getString("user.createUser"), Statement.RETURN_GENERATED_KEYS)) {
+            String password = BCrypt.hashpw(entity.getPassword(), BCrypt.gensalt(15));
+
             ps.setString(1, entity.getUserName());
             ps.setString(2, entity.getEmail());
-            ps.setString(3, entity.getPassword());
+            ps.setString(3, password);
             ps.setString(4, entity.getFirstName());
             ps.setString(5, entity.getLastName());
             ps.setString(6, String.valueOf(entity.getRole()));

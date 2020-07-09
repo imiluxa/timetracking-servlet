@@ -1,6 +1,7 @@
 package ua.imiluxa.trainingproject.controller.command;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.mindrot.jbcrypt.BCrypt;
 import ua.imiluxa.trainingproject.model.entity.User;
 import ua.imiluxa.trainingproject.service.UserService;
 
@@ -31,10 +32,11 @@ public class LoginCommand implements Command{
 
         User findedUser = user.get();
 
-        if (findedUser.getPassword().equals(password)) {
+        if (BCrypt.checkpw(password, findedUser.getPassword())) {
             HttpSession session = request.getSession();
             session.setAttribute("roleUser", findedUser);
             session.setAttribute("role", findedUser.getRole().toString());
+
             return "redirect:/index";
         } else {
             return "/login.jsp";

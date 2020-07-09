@@ -21,6 +21,7 @@ public class AddRequestCommand implements Command {
     public String execute(HttpServletRequest request) {
 
         String strIdAct = request.getParameter("request.act.id");
+        String strIdReq = request.getParameter("request.id");
         User user = (User) request.getSession().getAttribute("roleUser");
 
         setDefAttributes(request);
@@ -29,7 +30,11 @@ public class AddRequestCommand implements Command {
             Long idAct = Long.valueOf(strIdAct);
             Activity activity = activityService.getActivityById(idAct);
             request.setAttribute("idAct", idAct);
-            Request req = requestService.getRequestByUserIdAndActivityId(user.getId(), idAct);
+            Request req;
+            if (strIdReq != null && user.getRole() == Role.ADMIN)
+                req = requestService.getRequestById(Long.valueOf(strIdReq));
+            else
+                req = requestService.getRequestByUserIdAndActivityId(user.getId(), idAct);
 
             if (activity.getUser() == null) {
                 requestService.create(RequestDTO.builder().user(user)

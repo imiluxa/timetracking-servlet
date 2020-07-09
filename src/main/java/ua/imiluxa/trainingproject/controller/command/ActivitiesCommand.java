@@ -13,7 +13,7 @@ public class ActivitiesCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-            request.setAttribute("activities", activityService.getAllActivities());
+        request.setAttribute("activities", activityService.getAllActivities());
 
         return "/activities.jsp";
     }
